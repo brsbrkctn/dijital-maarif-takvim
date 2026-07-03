@@ -5,6 +5,16 @@ All notable changes to the **Dijital Maarif Takvimi** project will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2026-07-04
+
+### Fixed & Enhanced
+- **Date Plaque Gap Fix**: Replaced `justify-content: space-evenly` with a tight, optically centered flex gap (`gap: 0.75rem`), eliminating massive vertical empty voids above and below the day number `4`.
+- **Prominent Next Prayer Countdown Banner**: Created a high-visibility gradient countdown banner (`.next-prayer-banner`) positioned at the top of the Left Card (`SONRAKİ VAKİT: İkindi - 02:15:30`).
+- **Clean No-Emoji Prayer Rows**: Removed emojis from prayer rows for a professional, uncluttered layout.
+- **Full Unabbreviated Durations**: Expanded "S." and "D." into full words (`Gündüz Süresi: 15 Saat 17 Dakika` | `Gece Süresi: 8 Saat 43 Dakika`).
+- **GÜNÜN SÖZÜ Header**: Changed quote section title strictly to `GÜNÜN SÖZÜ`.
+- **Exact Date Quote Lookup**: Verified exact MM-DD key lookup in `data-store.js` without day-of-year index bugs.
+
 ## [2.3.0] - 2026-07-04
 
 ### Redesigned & Perfected

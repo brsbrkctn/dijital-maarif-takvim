@@ -1,15 +1,15 @@
 /**
- * MAIN APP ORCHESTRATOR — v2.3.0
- * Handles real-time clock, intuitive prayer time rows with status badges,
- * Open-Meteo weather, Ankara default, local JSON loader, and AMOLED burn-in protection.
+ * MAIN APP ORCHESTRATOR — v2.4.0
+ * Handles clock animations, countdown banner, prayer time status badges,
+ * full-word daylight/night durations, Open-Meteo weather, and Ankara default.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // Clear stale localStorage cache on v2.3.0 update
-  if (localStorage.getItem('maarif_ver') !== '2.3.0') {
+  // Force clean stale localStorage on v2.4.0 update
+  if (localStorage.getItem('maarif_ver') !== '2.4.0') {
     localStorage.removeItem('maarif_city');
-    localStorage.setItem('maarif_ver', '2.3.0');
+    localStorage.setItem('maarif_ver', '2.4.0');
   }
 
   // State (Default city: Ankara)
@@ -56,8 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const nameMale = document.getElementById('name-male');
   const nameFemale = document.getElementById('name-female');
 
-  // Duration & Countdown DOM Elements
-  const nextPrayerCountdown = document.getElementById('next-prayer-countdown');
+  // Countdown Banner DOM Elements
+  const nextPrayerName = document.getElementById('next-prayer-name');
+  const nextPrayerTimer = document.getElementById('next-prayer-timer');
   const dayDuration = document.getElementById('day-duration');
   const nightDuration = document.getElementById('night-duration');
 
@@ -157,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- 3. PRAYER TIMES HIGHLIGHT & INTUITIVE COUNTDOWN ---
+  // --- 3. PRAYER TIMES HIGHLIGHT & COUNTDOWN BANNER ---
   function updatePrayerState(h, m, s) {
     const currentMins = h * 60 + m;
     const currentSecsTotal = h * 3600 + m * 60 + s;
@@ -178,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     let activeIndex = 5; // default Yatsı
-    let nextPrayer = prayerTimesMins[0]; // default next İmsak
+    let nextPrayer = prayerTimesMins[0];
 
     for (let i = 0; i < prayerTimesMins.length; i++) {
       const curr = prayerTimesMins[i];
@@ -192,7 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update prayer row badges and active status
     document.querySelectorAll('.prayer-row').forEach((el, idx) => {
-      const pKey = el.getAttribute('data-prayer');
       const badge = el.querySelector('.p-status-badge');
 
       if (idx === activeIndex) {
@@ -218,14 +218,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const diffSecs = targetSecs - currentSecsTotal;
     const cdH = Math.floor(diffSecs / 3600);
     const cdM = Math.floor((diffSecs % 3600) / 60);
+    const cdS = diffSecs % 60;
 
-    let countdownStr = `⏳ ${nextPrayer.name} vaktine `;
-    if (cdH > 0) countdownStr += `${cdH} Saat `;
-    countdownStr += `${cdM} Dk kaldı`;
+    const cdHStr = String(cdH).padStart(2, '0');
+    const cdMStr = String(cdM).padStart(2, '0');
+    const cdSStr = String(cdS).padStart(2, '0');
 
-    nextPrayerCountdown.textContent = countdownStr;
+    if (nextPrayerName) nextPrayerName.textContent = nextPrayer.name;
+    if (nextPrayerTimer) nextPrayerTimer.textContent = `${cdHStr}:${cdMStr}:${cdSStr}`;
 
-    // Calculate Day/Night Duration (Sunrise to Sunset)
+    // Calculate Day/Night Duration (Sunrise to Sunset) in FULL WORDS
     const dayLengthMins = prayerTimesMins[4].mins - prayerTimesMins[1].mins; // Akşam - Güneş
     const nightLengthMins = (24 * 60) - dayLengthMins;
 
@@ -234,8 +236,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const nH = Math.floor(nightLengthMins / 60);
     const nM = nightLengthMins % 60;
 
-    dayDuration.textContent = `Gündüz: ${dH} S. ${dM} D.`;
-    nightDuration.textContent = `Gece: ${nH} S. ${nM} D.`;
+    dayDuration.textContent = `Gündüz Süresi: ${dH} Saat ${dM} Dakika`;
+    nightDuration.textContent = `Gece Süresi: ${nH} Saat ${nM} Dakika`;
   }
 
   // --- 4. LOAD API & LOCAL DATA ---

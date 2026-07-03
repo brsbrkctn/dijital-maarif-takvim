@@ -1,6 +1,6 @@
 {
   "name": "dijital-maarif-takvimi",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Nostalgic digital Saatli Maarif Takvimi single-page web app for desktop and tablet display.",
   "main": "index.html",
   "scripts": {

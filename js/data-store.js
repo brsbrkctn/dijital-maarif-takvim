@@ -1,6 +1,6 @@
 /**
- * DATA STORE MODULE (v2.1.0)
- * Loads user data from ./data.json with support for multi-event bulleted arrays.
+ * DATA STORE MODULE (v2.4.0)
+ * Loads user data from ./data.json by exact date key (MM-DD) with clean fallback handling.
  */
 
 window.DataStore = (function () {
@@ -8,8 +8,8 @@ window.DataStore = (function () {
 
   // Fallback dataset dictionary if date is missing in JSON
   const defaultQuotes = [
-    { text: "Düşünmeden öğrenmek boşuna, öğrenmeden düşünmek tehlikelidir.", author: "Konfüçyüs" },
     { text: "Hayatta en hakiki mürşit ilimdir, fendir.", author: "Mustafa Kemal Atatürk" },
+    { text: "Düşünmeden öğrenmek boşuna, öğrenmeden düşünmek tehlikelidir.", author: "Konfüçyüs" },
     { text: "İlim ilim bilmektir, ilim kendin bilmektir.", author: "Yunus Emre" }
   ];
 
@@ -117,9 +117,9 @@ window.DataStore = (function () {
       quote: quoteObj.text,
       quote_author: quoteObj.author,
       name_male: nameObj.male,
-      name_male_desc: nameObj.desc || "",
+      name_male_desc: "",
       name_female: nameObj.female,
-      name_female_desc: nameObj.desc || ""
+      name_female_desc: ""
     };
   }
 

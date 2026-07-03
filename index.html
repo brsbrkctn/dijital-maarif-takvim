@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Dijital Masa & Maarif Takvimi v2.3</title>
+  <title>Dijital Masa & Maarif Takvimi v2.4</title>
   <meta name="description" content="Nostaljik ve modern çizgilerle tasarlanmış canlı ezan vakitli, hava durumlu dijital masa takvimi.">
   
   <!-- Google Fonts: Plus Jakarta Sans + Playfair Display -->
@@ -11,13 +11,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="css/style.css?v=2.3.0">
+  <link rel="stylesheet" href="css/style.css?v=2.4.0">
 </head>
 <body>
   <div id="app-root" class="app-root">
     <div class="dashboard-wrapper">
       
-      <!-- TOP STATUS BAR (Simplified: Hijri Only + Controls) -->
+      <!-- TOP STATUS BAR -->
       <header class="top-bar">
         <div class="brand-title">
           <span class="brand-icon">✦</span>
@@ -25,8 +25,7 @@
         </div>
 
         <div class="hijri-badge-header" title="İslami Hicrî Takvim">
-          <span class="moon-icon">🌙</span>
-          <span class="hijri-label">HİCRÎ TAKVİM:</span>
+          <span class="badge-label">HİCRÎ TAKVİM:</span>
           <strong id="badge-hijri">17 Muharrem 1448</strong>
         </div>
 
@@ -63,20 +62,27 @@
             </div>
           </div>
 
-          <!-- Intuitive Prayer Times Section -->
+          <!-- PROMINENT NEXT PRAYER COUNTDOWN BANNER -->
+          <div class="next-prayer-banner">
+            <div class="banner-left">
+              <span class="banner-tag">SONRAKİ VAKİT</span>
+              <strong id="next-prayer-name" class="banner-prayer-title">İkindi</strong>
+            </div>
+            <div class="banner-right">
+              <span id="next-prayer-timer" class="banner-timer">00 Saat 00 Dk</span>
+            </div>
+          </div>
+
+          <!-- Clean Prayer Times Section (No Emojis) -->
           <div class="prayer-section">
             <div class="prayer-header">
-              <h3>🕌 NAMAZ VAKİTLERİ</h3>
-              <span id="next-prayer-countdown" class="next-prayer-pill">⏳ Yükleniyor...</span>
+              <h3>NAMAZ VAKİTLERİ (DİYANET)</h3>
             </div>
 
             <div class="prayer-list-container" id="prayer-list">
               
               <div class="prayer-row" data-prayer="imsak">
-                <div class="p-row-left">
-                  <span class="p-icon">🌌</span>
-                  <span class="p-name">İmsak</span>
-                </div>
+                <span class="p-name">İmsak</span>
                 <div class="p-row-right">
                   <span class="p-time-val" id="time-imsak">--:--</span>
                   <span class="p-status-badge">Vakit</span>
@@ -84,10 +90,7 @@
               </div>
 
               <div class="prayer-row" data-prayer="gunes">
-                <div class="p-row-left">
-                  <span class="p-icon">🌅</span>
-                  <span class="p-name">Güneş</span>
-                </div>
+                <span class="p-name">Güneş</span>
                 <div class="p-row-right">
                   <span class="p-time-val" id="time-gunes">--:--</span>
                   <span class="p-status-badge">Vakit</span>
@@ -95,10 +98,7 @@
               </div>
 
               <div class="prayer-row" data-prayer="ogle">
-                <div class="p-row-left">
-                  <span class="p-icon">☀️</span>
-                  <span class="p-name">Öğle</span>
-                </div>
+                <span class="p-name">Öğle</span>
                 <div class="p-row-right">
                   <span class="p-time-val" id="time-ogle">--:--</span>
                   <span class="p-status-badge">Vakit</span>
@@ -106,10 +106,7 @@
               </div>
 
               <div class="prayer-row" data-prayer="ikindi">
-                <div class="p-row-left">
-                  <span class="p-icon">🌤️</span>
-                  <span class="p-name">İkindi</span>
-                </div>
+                <span class="p-name">İkindi</span>
                 <div class="p-row-right">
                   <span class="p-time-val" id="time-ikindi">--:--</span>
                   <span class="p-status-badge">Vakit</span>
@@ -117,10 +114,7 @@
               </div>
 
               <div class="prayer-row" data-prayer="aksam">
-                <div class="p-row-left">
-                  <span class="p-icon">🌆</span>
-                  <span class="p-name">Akşam</span>
-                </div>
+                <span class="p-name">Akşam</span>
                 <div class="p-row-right">
                   <span class="p-time-val" id="time-aksam">--:--</span>
                   <span class="p-status-badge">Vakit</span>
@@ -128,10 +122,7 @@
               </div>
 
               <div class="prayer-row" data-prayer="yatsi">
-                <div class="p-row-left">
-                  <span class="p-icon">🌙</span>
-                  <span class="p-name">Yatsı</span>
-                </div>
+                <span class="p-name">Yatsı</span>
                 <div class="p-row-right">
                   <span class="p-time-val" id="time-yatsi">--:--</span>
                   <span class="p-status-badge">Vakit</span>
@@ -140,15 +131,13 @@
 
             </div>
 
-            <!-- Daylight / Night Progress -->
+            <!-- Full Unabbreviated Daylight / Night Words -->
             <div class="sun-cycle-bar">
               <div class="cycle-item">
-                <span class="cycle-icon">☀️</span>
-                <span id="day-duration">Gündüz: -- S. -- D.</span>
+                <span id="day-duration">Gündüz Süresi: -- Saat -- Dakika</span>
               </div>
               <div class="cycle-item">
-                <span class="cycle-icon">🌙</span>
-                <span id="night-duration">Gece: -- S. -- D.</span>
+                <span id="night-duration">Gece Süresi: -- Saat -- Dakika</span>
               </div>
             </div>
           </div>
@@ -156,32 +145,25 @@
         </section>
 
 
-        <!-- CENTER COLUMN: OPTICALLY PERFECT CENTERED DATE PLAQUE -->
+        <!-- CENTER COLUMN: PERFECTLY BALANCED DATE PLAQUE (NO GAP VOIDS) -->
         <section class="dash-card card-center">
-          <div class="date-plaque-wrapper">
-            <div class="date-plaque-inner">
-              
-              <div class="plaque-header">
-                <span class="plaque-year" id="info-year">2026</span>
-                <h1 class="plaque-month" id="main-month-name">TEMMUZ</h1>
-              </div>
+          <div class="date-plaque-inner">
+            
+            <span class="plaque-year" id="info-year">2026</span>
+            <h1 class="plaque-month" id="main-month-name">TEMMUZ</h1>
+            
+            <div class="hero-day-number" id="main-day-number">4</div>
+            
+            <h2 class="plaque-day-name" id="main-day-name">CUMARTESİ</h2>
+            
+            <div class="season-badge-pill" id="main-season-note">Yaz Mevsimi (Hızır Günleri: 60. Gün)</div>
+            <div class="sun-change-pill" id="day-length-change">Günler 1-2 dakika kısalıyor</div>
 
-              <div class="plaque-day-container">
-                <div class="hero-day-number" id="main-day-number">4</div>
-              </div>
-
-              <div class="plaque-footer">
-                <h2 class="plaque-day-name" id="main-day-name">CUMARTESİ</h2>
-                <div class="season-badge-pill" id="main-season-note">☀️ Yaz Mevsimi (Hızır Günleri: 60. Gün)</div>
-                <div class="sun-change-pill" id="day-length-change">📉 Günler 1-2 dakika kısalıyor</div>
-              </div>
-
-            </div>
           </div>
         </section>
 
 
-        <!-- RIGHT COLUMN: Weather, Spaced History, Readable Quote & Names -->
+        <!-- RIGHT COLUMN: Weather, Spaced History, GÜNÜN SÖZÜ & Names -->
         <section class="dash-card card-right">
           
           <!-- Rich Modern Weather Widget -->
@@ -217,7 +199,7 @@
             </div>
           </div>
 
-          <!-- History Today (Comfortable Spacing) -->
+          <!-- History Today -->
           <div class="info-block history-block">
             <div class="block-header">
               <span class="block-icon">📜</span>
@@ -228,8 +210,12 @@
             </div>
           </div>
 
-          <!-- Readable Quote of the Day -->
+          <!-- Günün Sözü Section -->
           <div class="info-block quote-block">
+            <div class="block-header">
+              <span class="block-icon">💬</span>
+              <h3>GÜNÜN SÖZÜ</h3>
+            </div>
             <div class="quote-card-styled">
               <div class="quote-text-clean" id="quote-content">"..."</div>
               <div class="quote-author-clean" id="quote-author"></div>
@@ -244,11 +230,11 @@
             </div>
             <div class="names-row">
               <div class="name-pill male-pill">
-                <span class="gender-symbol">♂</span>
+                <span class="gender-label">Erkek:</span>
                 <strong id="name-male">-</strong>
               </div>
               <div class="name-pill female-pill">
-                <span class="gender-symbol">♀</span>
+                <span class="gender-label">Kız:</span>
                 <strong id="name-female">-</strong>
               </div>
             </div>
@@ -304,14 +290,14 @@
 
       </div>
       <div class="modal-footer">
-        <span class="ver-info">Sürüm: v2.3.0</span>
+        <span class="ver-info">Sürüm: v2.4.0</span>
       </div>
     </div>
   </div>
 
   <!-- Scripts -->
-  <script src="js/data-store.js?v=2.3.0"></script>
-  <script src="js/api.js?v=2.3.0"></script>
-  <script src="js/app.js?v=2.3.0"></script>
+  <script src="js/data-store.js?v=2.4.0"></script>
+  <script src="js/api.js?v=2.4.0"></script>
+  <script src="js/app.js?v=2.4.0"></script>
 </body>
 </html>
