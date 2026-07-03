@@ -5,6 +5,14 @@ All notable changes to the **Dijital Maarif Takvimi** project will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-07-04
+
+### Fixed & Enhanced
+- **Ankara Default & Stale Cache Reset**: Added auto-cache clearing (`maarif_ver: 2.2.0`) to reset stale browser `localStorage`. Set default location to Ankara (`39.9334, 32.8597`), ensuring instant accurate Ankara prayer times and weather.
+- **Date Header Redesign**: Removed confusing Rûmî header date to prevent month mismatch confusion. Replaced with clear badges (`Miladî: 4 Temmuz 2026 Cumartesi` | `Hicrî: 17 Muharrem 1448`).
+- **Date Plaque Layout**: Built a dedicated centered Date Plaque frame (`.date-plaque`) with dashed border and letter-spacing offsets.
+- **Multi-Event Bullet List**: Verified all items in `olaylar` array render as bulleted HTML lists (`<ul class="history-list">`).
+
 ## [2.1.0] - 2026-07-04
 
 ### Fixed & Enhanced

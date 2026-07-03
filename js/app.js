@@ -1,13 +1,19 @@
 /**
- * MAIN APP ORCHESTRATOR — MODERN & NOSTALGIK HYBRID (v2.0.0)
- * Handles real-time clock, prayer time countdowns & Diyanet mappings, Open-Meteo weather,
- * Hijri & Rûmî header badges, local JSON reader, auto IP/GPS location, and AMOLED burn-in protection.
+ * MAIN APP ORCHESTRATOR (v2.2.0)
+ * Modern & Nostalgic Fusion with Ankara default, Diyanet prayer precision,
+ * reverse geocoding, multi-event history lists, and AMOLED burn-in protection.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  
-  // State
-  let currentCity = localStorage.getItem('maarif_city') || 'AUTO';
+
+  // Force clean old localStorage cached city on v2.2.0 update
+  if (localStorage.getItem('maarif_ver') !== '2.2.0') {
+    localStorage.removeItem('maarif_city');
+    localStorage.setItem('maarif_ver', '2.2.0');
+  }
+
+  // State (Default city: Ankara)
+  let currentCity = localStorage.getItem('maarif_city') || 'Ankara';
   let burninEnabled = localStorage.getItem('maarif_burnin') !== 'false';
   let prayerData = null;
   let weatherData = null;
@@ -21,8 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const digitalClockTime = document.getElementById('digital-clock-time');
   
   // Header DOM Elements
+  const badgeMiladi = document.getElementById('badge-miladi');
   const badgeHijri = document.getElementById('badge-hijri');
-  const badgeRumi = document.getElementById('badge-rumi');
   const labelCurrentLocation = document.getElementById('label-current-location');
   const dayLengthChange = document.getElementById('day-length-change');
 
@@ -69,20 +75,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Month Names in Turkish
   const TURKISH_MONTHS = [
-    'OCAK', 'ŞUBAT', 'MART', 'NİSAN', 'MAYIS', 'HAZİRAN',
-    'TEMMUZ', 'AĞUSTOS', 'EYLÜL', 'EKİM', 'KASIM', 'ARALIK'
+    'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+    'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
   ];
 
   const TURKISH_DAYS = [
-    'PAZAR', 'PAZARTESİ', 'SALI', 'ÇARŞAMBA', 'PERŞEMBE', 'CUMA', 'CUMARTESİ'
+    'Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'
   ];
 
-  const RUMI_MONTHS = [
-    'Kânûn-ı Sânî', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
-    'Temmuz', 'Ağustos', 'Eylül', 'Teşrîn-i Evvel', 'Teşrîn-i Sânî', 'Kânûn-ı Evvel'
-  ];
-
-  // --- 1. CLOCK & TICK ENGINE ---
+  // --- 1. CLOCK ENGINE ---
   function updateClock() {
     const now = new Date();
     const hours = now.getHours();
@@ -104,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const sStr = String(seconds).padStart(2, '0');
     digitalClockTime.textContent = `${hStr}:${mStr}:${sStr}`;
 
-    // Highlight active prayer time and countdown
     if (prayerData) {
       updatePrayerState(hours, minutes, seconds);
     }
@@ -118,10 +118,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const date = now.getDate();
     const dayOfWeek = now.getDay();
 
-    // Center Hero
-    mainMonthName.textContent = TURKISH_MONTHS[month];
+    // Miladi Badge
+    badgeMiladi.textContent = `${date} ${TURKISH_MONTHS[month]} ${year} ${TURKISH_DAYS[dayOfWeek]}`;
+
+    // Center Plaque
+    mainMonthName.textContent = TURKISH_MONTHS[month].toUpperCase();
     mainDayNumber.textContent = date;
-    mainDayName.textContent = TURKISH_DAYS[dayOfWeek];
+    mainDayName.textContent = TURKISH_DAYS[dayOfWeek].toUpperCase();
     infoYear.textContent = year;
 
     // Day of Year
@@ -146,10 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       mainSeasonNote.textContent = `❄️ Kış Mevsimi (Kasım Günleri: ${count}. Gün)`;
     }
-
-    // Rûmî Calendar Calculation (Julian offset ~13 days)
-    const rumiDateObj = new Date(now.getTime() - (13 * 24 * 60 * 60 * 1000));
-    badgeRumi.textContent = `${rumiDateObj.getDate()} ${RUMI_MONTHS[rumiDateObj.getMonth()]} ${rumiDateObj.getFullYear() - 584}`;
 
     // Solstices: June 21 to Dec 21
     const summerSolstice = new Date(year, 5, 21);
@@ -183,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     let activeKey = 'yatsi';
-    let nextPrayer = prayerTimesMins[0]; // default next day İmsak
+    let nextPrayer = prayerTimesMins[0];
 
     for (let i = 0; i < prayerTimesMins.length; i++) {
       const curr = prayerTimesMins[i];
@@ -207,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Calculate countdown to next prayer
     let targetSecs = nextPrayer.mins * 60;
     if (targetSecs <= currentSecsTotal) {
-      targetSecs += 24 * 3600; // Next day
+      targetSecs += 24 * 3600;
     }
     const diffSecs = targetSecs - currentSecsTotal;
     const cdH = Math.floor(diffSecs / 3600);
@@ -236,9 +235,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- 4. LOAD API & LOCAL DATA ---
   async function loadAllData() {
     const now = new Date();
-    let lat = 41.0082;
-    let lon = 28.9784;
-    let cityName = 'İstanbul';
+    let lat = 39.9334; // Default Ankara
+    let lon = 32.8597;
+    let cityName = 'Ankara';
 
     if (currentCity === 'AUTO') {
       const loc = await window.ApiService.detectLocation();
@@ -252,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cityName = c.name;
     }
     
-    labelCurrentLocation.textContent = `${cityName} (${currentCity === 'AUTO' ? 'Otomatik' : 'Manuel'})`;
+    labelCurrentLocation.textContent = `${cityName}`;
     weatherCityLabel.textContent = cityName;
 
     // Load Weather

@@ -3,45 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Dijital Maarif Takvimi — Modern Nostalji</title>
-  <meta name="description" content="Modern ve nostaljik çizgilere sahip, canlı hava durumu, ezan vakitleri ve günün verilerini sunan dijital masa takvimi.">
+  <title>Dijital Masa & Maarif Takvimi v2.2</title>
+  <meta name="description" content="Ankara ve tüm şehirler için canlı ezan vakitli, hava durumlu, nostaljik ve modern dijital masa takvimi.">
   
-  <!-- Google Fonts: Outfit (Modern) + Playfair Display (Nostalgic) -->
+  <!-- Google Fonts: Plus Jakarta Sans (Modern) + Playfair Display (Nostalgic) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;0,900;1,400&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2.2.0">
 </head>
 <body>
   <div id="app-root" class="app-root">
     <div class="dashboard-wrapper">
       
-      <!-- TOP NAVIGATION & STATUS BAR -->
+      <!-- TOP STATUS BAR -->
       <header class="top-bar">
         <div class="brand-title">
           <span class="brand-icon">✦</span>
-          <span class="brand-name">Dijital Maarif Takvimi</span>
+          <span class="brand-name">Dijital Masa Takvimi</span>
         </div>
 
         <div class="calendar-badges">
-          <div class="badge-item" title="İslami Hicrî Takvim">
-            <span class="badge-label">HİCRÎ</span>
-            <strong id="badge-hijri">17 Muharrem 1448</strong>
+          <div class="badge-item">
+            <span class="badge-icon">📅</span>
+            <strong id="badge-miladi">4 Temmuz 2026 Cumartesi</strong>
           </div>
-          <div class="badge-divider">•</div>
-          <div class="badge-item" title="Geleneksel Rûmî Takvim (Miladî tarihten 13 gün geridedir)">
-            <span class="badge-label">RÛMÎ TAKVİM</span>
-            <strong id="badge-rumi">21 Haziran 1442</strong>
+          <div class="badge-divider">|</div>
+          <div class="badge-item">
+            <span class="badge-icon">🌙</span>
+            <span class="badge-label">HİCRÎ:</span>
+            <strong id="badge-hijri">17 Muharrem 1448</strong>
           </div>
         </div>
 
         <div class="top-actions">
-          <button id="btn-location-select" class="action-btn location-btn" title="Konum Değiştir">
+          <button id="btn-location-select" class="action-btn location-btn" title="Şehir Seç">
             <span class="loc-icon">📍</span>
-            <span id="label-current-location">İstanbul (Otomatik)</span>
+            <span id="label-current-location">Ankara</span>
           </button>
-          <span class="burnin-badge" id="burnin-status-badge">🛡️ Pixel-Shift</span>
+          <span class="burnin-badge" id="burnin-status-badge">🛡️ Burn-in Koruması</span>
           <button id="btn-toggle-fullscreen" class="action-btn icon-only-btn" title="Tam Ekran">⛶</button>
           <button id="btn-open-settings" class="action-btn icon-only-btn" title="Ayarlar">⚙️</button>
         </div>
@@ -53,7 +54,7 @@
         <!-- LEFT COLUMN: Clock & Prayer Times -->
         <section class="dash-card card-left">
           
-          <!-- Clock Header -->
+          <!-- Clock Banner -->
           <div class="clock-banner">
             <div class="digital-clock-main">
               <span id="digital-clock-time">00:00:00</span>
@@ -72,8 +73,8 @@
           <!-- Prayer Times Section -->
           <div class="prayer-section">
             <div class="prayer-header">
-              <h3>NAMAZ VAKİTLERİ</h3>
-              <span id="next-prayer-countdown" class="next-prayer-tag">Sonraki Vakit...</span>
+              <h3>NAMAZ VAKİTLERİ (DİYANET)</h3>
+              <span id="next-prayer-countdown" class="next-prayer-tag">Hesaplanıyor...</span>
             </div>
 
             <div class="prayer-grid" id="prayer-list">
@@ -119,23 +120,23 @@
         </section>
 
 
-        <!-- CENTER COLUMN: Date Hero -->
+        <!-- CENTER COLUMN: PERFECTLY CENTERED DATE PLAQUE -->
         <section class="dash-card card-center">
-          <div class="date-hero-container">
+          <div class="date-plaque">
             
-            <div class="month-header">
-              <span class="year-label" id="info-year">2026</span>
-              <h1 class="month-title" id="main-month-name">TEMMUZ</h1>
+            <div class="plaque-top">
+              <span class="plaque-year" id="info-year">2026</span>
+              <h1 class="plaque-month" id="main-month-name">TEMMUZ</h1>
             </div>
 
-            <div class="day-num-box">
-              <span class="hero-day-number" id="main-day-number">4</span>
+            <div class="plaque-mid">
+              <span class="plaque-day-number" id="main-day-number">4</span>
             </div>
 
-            <div class="day-footer">
-              <h2 class="day-title" id="main-day-name">CUMARTESİ</h2>
-              <div class="season-pill" id="main-season-note">☀️ Yaz Mevsimi (Hızır Günleri: 60. Gün)</div>
-              <div class="sun-change-pill" id="day-length-change">📉 Günler 1-2 dakika kısalıyor</div>
+            <div class="plaque-bottom">
+              <h2 class="plaque-day-name" id="main-day-name">CUMARTESİ</h2>
+              <div class="plaque-season" id="main-season-note">☀️ Yaz Mevsimi (Hızır Günleri: 60. Gün)</div>
+              <div class="plaque-sun-change" id="day-length-change">📉 Günler 1-2 dakika kısalıyor</div>
             </div>
 
           </div>
@@ -149,8 +150,8 @@
           <div class="weather-widget">
             <div class="w-top">
               <div class="w-city-info">
-                <span class="w-label">HAVA DURUMU</span>
-                <strong id="weather-city-label">İstanbul</strong>
+                <span class="w-label">CANLI HAVA DURUMU</span>
+                <strong id="weather-city-label">Ankara</strong>
               </div>
               <div class="w-temp-box">
                 <span class="w-temp-val" id="weather-temp">--°</span>
@@ -167,7 +168,7 @@
                 <span>En Yüksek</span>
                 <strong id="w-max">--°</strong>
               </div>
-                <div class="w-stat">
+              <div class="w-stat">
                 <span>En Düşük</span>
                 <strong id="w-min">--°</strong>
               </div>
@@ -224,17 +225,16 @@
   <div id="settings-modal" class="modal-backdrop hidden">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>Takvim & Konum Ayarları</h2>
+        <h2>Şehir & Takvim Ayarları</h2>
         <button id="btn-close-settings" class="modal-close-btn">&times;</button>
       </div>
       <div class="modal-body">
         
         <div class="setting-group">
-          <label for="select-city">Şehir / Konum Seçimi:</label>
+          <label for="select-city">Şehir Seçimi:</label>
           <select id="select-city" class="custom-select">
-            <option value="AUTO">📍 Otomatik Konum (GPS / IP)</option>
-            <option value="Istanbul">İstanbul</option>
             <option value="Ankara">Ankara</option>
+            <option value="Istanbul">İstanbul</option>
             <option value="Izmir">İzmir</option>
             <option value="Bursa">Bursa</option>
             <option value="Antalya">Antalya</option>
@@ -246,15 +246,16 @@
             <option value="Gaziantep">Gaziantep</option>
             <option value="Kayseri">Kayseri</option>
             <option value="Sivas">Sivas</option>
+            <option value="AUTO">📍 Otomatik Konum (GPS / IP)</option>
           </select>
         </div>
 
         <div class="setting-group">
           <label for="burnin-toggle" class="checkbox-label">
             <input type="checkbox" id="burnin-toggle" checked>
-            <span>AMOLED/LCD Ekran Yanması Koruması (Pixel Shift)</span>
+            <span>Ekran Yanması Koruması (Pixel Shift)</span>
           </label>
-          <small class="setting-desc">Her 60 saniyede bir arayüzü 1-2px kaydırarak sabit kalan piksellerin yanmasını engeller.</small>
+          <small class="setting-desc">Her 60 saniyede bir ekran öğelerini 1-2px kaydırarak AMOLED/LCD piksellerinin yanmasını önler.</small>
         </div>
 
         <div class="setting-group">
@@ -263,14 +264,14 @@
 
       </div>
       <div class="modal-footer">
-        <span class="ver-info">Sürüm: v2.1.0 (Modern-Nostaljik Hibrit)</span>
+        <span class="ver-info">Sürüm: v2.2.0</span>
       </div>
     </div>
   </div>
 
   <!-- Scripts -->
-  <script src="js/data-store.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/data-store.js?v=2.2.0"></script>
+  <script src="js/api.js?v=2.2.0"></script>
+  <script src="js/app.js?v=2.2.0"></script>
 </body>
 </html>

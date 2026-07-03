@@ -1,6 +1,6 @@
 /* ==========================================================================
-   DIJITAL MAARIF TAKVIMI — PERFECTED MODERN & NOSTALGIC FUSION (v2.1.0)
-   Precision Centering, Bulleted History, Diyanet Accuracy, and Gold Accents
+   DIJITAL MAARIF TAKVIMI — MODERN & NOSTALGIC FUSION (v2.2.0)
+   Centered Date Plaque, Diyanet Prayer Accuracy, and Multi-Event Bullet Lists
    ========================================================================== */
 
 *, *::before, *::after {
@@ -10,21 +10,21 @@
 }
 
 :root {
-  --bg-dark: #0E0D0C;
-  --bg-gradient: radial-gradient(ellipse at center, #1C1916 0%, #090807 100%);
+  --bg-dark: #0D0C0B;
+  --bg-gradient: radial-gradient(ellipse at center, #1E1A16 0%, #070605 100%);
   
-  --card-bg: rgba(24, 21, 18, 0.9);
+  --card-bg: rgba(24, 21, 18, 0.92);
   --card-border: rgba(229, 185, 78, 0.22);
   --card-border-gold: rgba(229, 185, 78, 0.5);
   
-  --text-primary: #F7F3EE;
-  --text-secondary: #C4BBB0;
-  --text-muted: #8C8276;
+  --text-primary: #F8F4EE;
+  --text-secondary: #C8BFB4;
+  --text-muted: #8E8478;
   --gold-accent: #E5B94E;
-  --gold-glow: rgba(229, 185, 78, 0.15);
-  --active-bg: rgba(229, 185, 78, 0.18);
+  --gold-glow: rgba(229, 185, 78, 0.18);
+  --active-bg: rgba(229, 185, 78, 0.2);
   
-  --font-modern: 'Outfit', -apple-system, sans-serif;
+  --font-modern: 'Plus Jakarta Sans', -apple-system, sans-serif;
   --font-serif: 'Playfair Display', Georgia, serif;
 }
 
@@ -40,7 +40,6 @@ html, body {
   -webkit-user-select: none;
 }
 
-/* --- App Root Container --- */
 .app-root {
   width: 100%;
   height: 100%;
@@ -86,7 +85,7 @@ html, body {
 }
 .brand-name {
   font-family: var(--font-serif);
-  font-weight: 700;
+  font-weight: 800;
   font-size: clamp(0.95rem, 1.25vw, 1.2rem);
   letter-spacing: 0.05em;
   color: var(--text-primary);
@@ -106,6 +105,9 @@ html, body {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+}
+.badge-icon {
+  font-size: 0.9em;
 }
 .badge-label {
   color: var(--gold-accent);
@@ -288,95 +290,104 @@ html, body {
   gap: 0.3rem;
 }
 
-/* --- CENTER COLUMN: MATHEMATICALLY CENTERED DATE HERO --- */
+/* --- CENTER COLUMN: MATHEMATICALLY CENTERED PLAQUE --- */
 .card-center {
-  background: radial-gradient(circle at center, rgba(32, 28, 24, 0.95) 0%, rgba(15, 13, 11, 0.98) 100%);
+  background: radial-gradient(ellipse at center, rgba(35, 30, 24, 0.98) 0%, rgba(12, 10, 8, 1) 100%);
   border-color: var(--card-border-gold);
-  box-shadow: 0 0 40px rgba(0,0,0,0.6), inset 0 0 25px var(--gold-glow);
+  box-shadow: 0 0 45px rgba(0,0,0,0.7), inset 0 0 25px var(--gold-glow);
+  padding: 0.8rem;
 }
 
-.date-hero-container {
+.date-plaque {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 100%;
   width: 100%;
-  gap: 0.6rem;
-  padding: 0.8rem 0;
+  height: 100%;
+  border: 1.5px dashed rgba(229, 185, 78, 0.4);
+  border-radius: 12px;
+  padding: 1rem 0.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  gap: 0.75rem;
   margin: 0 auto;
 }
 
-.month-header {
+.plaque-top {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
 }
-.year-label {
-  font-size: clamp(0.78rem, 1vw, 0.92rem);
-  font-weight: 600;
+
+.plaque-year {
+  font-size: clamp(0.8rem, 1.1vw, 1rem);
+  font-weight: 700;
   color: var(--gold-accent);
   letter-spacing: 0.25em;
-  margin-right: -0.25em; /* Neutralizes trailing letter spacing for exact centering */
+  margin-right: -0.25em;
 }
-.month-title {
+
+.plaque-month {
   font-family: var(--font-serif);
-  font-size: clamp(2rem, 4.2vw, 3.6rem);
+  font-size: clamp(2rem, 4.4vw, 3.8rem);
   font-weight: 900;
   letter-spacing: 0.3em;
-  margin-right: -0.3em; /* Neutralizes trailing letter spacing for exact centering */
+  margin-right: -0.3em;
   line-height: 1.1;
   text-transform: uppercase;
   color: var(--text-primary);
 }
 
-.day-num-box {
+.plaque-mid {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   margin: 0.2rem 0;
 }
-.hero-day-number {
+
+.plaque-day-number {
   font-family: var(--font-serif);
-  font-size: clamp(5.8rem, 14vw, 11.5rem);
+  font-size: clamp(5.8rem, 14.5vw, 12rem);
   font-weight: 900;
-  line-height: 1;
+  line-height: 0.95;
   color: var(--gold-accent);
-  text-shadow: 0 4px 30px rgba(229, 185, 78, 0.25);
+  text-shadow: 0 4px 35px rgba(229, 185, 78, 0.3);
 }
 
-.day-footer {
+.plaque-bottom {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  gap: 0.4rem;
+  gap: 0.45rem;
 }
-.day-title {
+
+.plaque-day-name {
   font-family: var(--font-serif);
-  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  font-size: clamp(1.5rem, 3.1vw, 2.5rem);
   font-weight: 900;
   letter-spacing: 0.2em;
-  margin-right: -0.2em; /* Neutralizes trailing letter spacing for exact centering */
+  margin-right: -0.2em;
   line-height: 1.1;
   text-transform: uppercase;
   color: var(--text-primary);
 }
 
-.season-pill {
+.plaque-season {
   font-size: clamp(0.75rem, 0.95vw, 0.88rem);
   color: var(--text-secondary);
   background: rgba(229, 185, 78, 0.12);
   border: 1px solid rgba(229, 185, 78, 0.3);
-  padding: 0.25rem 0.75rem;
+  padding: 0.25rem 0.8rem;
   border-radius: 20px;
 }
-.sun-change-pill {
+
+.plaque-sun-change {
   font-size: clamp(0.7rem, 0.82vw, 0.78rem);
   color: var(--text-muted);
 }
@@ -476,7 +487,7 @@ html, body {
   color: var(--text-primary);
 }
 
-/* Bulleted History List Styling */
+/* Bulleted History List */
 .history-list {
   list-style: none;
   padding: 0;
