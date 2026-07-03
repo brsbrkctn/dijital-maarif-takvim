@@ -1,15 +1,15 @@
 /**
- * MAIN APP ORCHESTRATOR (v2.2.0)
- * Modern & Nostalgic Fusion with Ankara default, Diyanet prayer precision,
- * reverse geocoding, multi-event history lists, and AMOLED burn-in protection.
+ * MAIN APP ORCHESTRATOR — v2.3.0
+ * Handles real-time clock, intuitive prayer time rows with status badges,
+ * Open-Meteo weather, Ankara default, local JSON loader, and AMOLED burn-in protection.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // Force clean old localStorage cached city on v2.2.0 update
-  if (localStorage.getItem('maarif_ver') !== '2.2.0') {
+  // Clear stale localStorage cache on v2.3.0 update
+  if (localStorage.getItem('maarif_ver') !== '2.3.0') {
     localStorage.removeItem('maarif_city');
-    localStorage.setItem('maarif_ver', '2.2.0');
+    localStorage.setItem('maarif_ver', '2.3.0');
   }
 
   // State (Default city: Ankara)
@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const digitalClockTime = document.getElementById('digital-clock-time');
   
   // Header DOM Elements
-  const badgeMiladi = document.getElementById('badge-miladi');
   const badgeHijri = document.getElementById('badge-hijri');
   const labelCurrentLocation = document.getElementById('label-current-location');
   const dayLengthChange = document.getElementById('day-length-change');
@@ -118,9 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const date = now.getDate();
     const dayOfWeek = now.getDay();
 
-    // Miladi Badge
-    badgeMiladi.textContent = `${date} ${TURKISH_MONTHS[month]} ${year} ${TURKISH_DAYS[dayOfWeek]}`;
-
     // Center Plaque
     mainMonthName.textContent = TURKISH_MONTHS[month].toUpperCase();
     mainDayNumber.textContent = date;
@@ -161,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- 3. PRAYER TIMES HIGHLIGHT & COUNTDOWN ---
+  // --- 3. PRAYER TIMES HIGHLIGHT & INTUITIVE COUNTDOWN ---
   function updatePrayerState(h, m, s) {
     const currentMins = h * 60 + m;
     const currentSecsTotal = h * 3600 + m * 60 + s;
@@ -181,25 +177,36 @@ document.addEventListener('DOMContentLoaded', () => {
       { key: 'yatsi', name: 'Yatsı', mins: timeToMins(prayerData.yatsi) }
     ];
 
-    let activeKey = 'yatsi';
-    let nextPrayer = prayerTimesMins[0];
+    let activeIndex = 5; // default Yatsı
+    let nextPrayer = prayerTimesMins[0]; // default next İmsak
 
     for (let i = 0; i < prayerTimesMins.length; i++) {
       const curr = prayerTimesMins[i];
       const next = prayerTimesMins[(i + 1) % prayerTimesMins.length];
       if (currentMins >= curr.mins && (i === prayerTimesMins.length - 1 || currentMins < next.mins)) {
-        activeKey = curr.key;
+        activeIndex = i;
         nextPrayer = next;
         break;
       }
     }
 
-    // Highlight active card
-    document.querySelectorAll('.prayer-card-item').forEach(el => {
-      if (el.getAttribute('data-prayer') === activeKey) {
+    // Update prayer row badges and active status
+    document.querySelectorAll('.prayer-row').forEach((el, idx) => {
+      const pKey = el.getAttribute('data-prayer');
+      const badge = el.querySelector('.p-status-badge');
+
+      if (idx === activeIndex) {
         el.classList.add('active');
+        if (badge) badge.textContent = 'AKTİF VAKİT';
       } else {
         el.classList.remove('active');
+        if (badge) {
+          if (idx < activeIndex) {
+            badge.textContent = 'Geçti';
+          } else {
+            badge.textContent = 'Girecek';
+          }
+        }
       }
     });
 
@@ -211,13 +218,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const diffSecs = targetSecs - currentSecsTotal;
     const cdH = Math.floor(diffSecs / 3600);
     const cdM = Math.floor((diffSecs % 3600) / 60);
-    const cdS = diffSecs % 60;
 
-    const cdHStr = String(cdH).padStart(2, '0');
-    const cdMStr = String(cdM).padStart(2, '0');
-    const cdSStr = String(cdS).padStart(2, '0');
+    let countdownStr = `⏳ ${nextPrayer.name} vaktine `;
+    if (cdH > 0) countdownStr += `${cdH} Saat `;
+    countdownStr += `${cdM} Dk kaldı`;
 
-    nextPrayerCountdown.textContent = `Sonraki: ${nextPrayer.name} (${cdHStr}:${cdMStr}:${cdSStr})`;
+    nextPrayerCountdown.textContent = countdownStr;
 
     // Calculate Day/Night Duration (Sunrise to Sunset)
     const dayLengthMins = prayerTimesMins[4].mins - prayerTimesMins[1].mins; // Akşam - Güneş
@@ -256,12 +262,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load Weather
     weatherData = await window.ApiService.fetchWeather(lat, lon, cityName);
-    weatherTemp.textContent = `${weatherData.temp}°`;
+    weatherTemp.textContent = `${weatherData.temp}°C`;
     weatherDesc.textContent = weatherData.desc;
-    wFeels.textContent = `${weatherData.feels}°`;
-    wMax.textContent = `${weatherData.max}°`;
-    wMin.textContent = `${weatherData.min}°`;
-    wHumidity.textContent = `%${weatherData.humidity}`;
+    wFeels.textContent = `${weatherData.feels}°C`;
+    wMax.textContent = `${weatherData.max}°C`;
+    wMin.textContent = `${weatherData.min}°C`;
+    wHumidity.textContent = `%${weatherData.humidity} / ${weatherData.wind} km/s`;
 
     // Load Prayer & Hijri with exact lat/lon
     prayerData = await window.ApiService.fetchPrayerTimes(lat, lon);
@@ -277,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load Local JSON Content
     const content = await window.DataStore.getDailyContent(now.getMonth() + 1, now.getDate());
     historyContent.innerHTML = content.history;
-    quoteContent.textContent = `"${content.quote}"`;
+    quoteContent.textContent = content.quote ? `"${content.quote}"` : "";
     quoteAuthor.textContent = content.quote_author ? `— ${content.quote_author}` : '';
     nameMale.textContent = content.name_male_desc ? `${content.name_male} (${content.name_male_desc})` : content.name_male;
     nameFemale.textContent = content.name_female_desc ? `${content.name_female} (${content.name_female_desc})` : content.name_female;

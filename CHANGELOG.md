@@ -5,6 +5,16 @@ All notable changes to the **Dijital Maarif Takvimi** project will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-07-04
+
+### Redesigned & Perfected
+- **Header Simplification**: Removed redundant Miladî date from top header bar, keeping exclusively the Hicrî Date badge (`🌙 HİCRÎ TAKVİM: 17 Muharrem 1448`) to eliminate clutter.
+- **Intuitive Prayer Rows**: Replaced raw list with high-visibility horizontal prayer row cards featuring icons, time values, and live status badges (`AKTİF VAKİT`, `Vakit`, `Geçti`).
+- **Date Plaque Optical Centering**: Enclosed day number `4` in an optically centered flex plaque container, eliminating single-digit numeral font bearing offsets.
+- **Airy Multi-Event History List**: Increased line spacing and font size for `olaylar` bullet list with custom golden star bullets (`✦`).
+- **Readable Non-Italic Quote Card**: Redesigned daily quote card with left gold border and clean sans-serif typography for high tablet legibility.
+- **Rich Weather Widget**: Upgraded weather display into a 4-tile metric card showing temperature, humidity, wind speed, and conditions.
+
 ## [2.2.0] - 2026-07-04
 
 ### Fixed & Enhanced
