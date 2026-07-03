@@ -5,6 +5,14 @@ All notable changes to the **Dijital Maarif Takvimi** project will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-07-04
+
+### Fixed & Enhanced
+- **Reverse Geocoding & Precise Ankara Location**: Added reverse geocoding API integration. GPS/IP now accurately resolves to user's city (Ankara), delivering exact Ankara Diyanet prayer times and Open-Meteo weather.
+- **Multi-Event History List**: Formatted all items in `olaylar` array as clean HTML bulleted lists (`<ul class="history-list">`), displaying all 3 historical events instead of clipping to 1.
+- **Mathematical Date Centering**: Added negative margin offsets matching letter-spacing to ensure `TEMMUZ`, day number `4`, and `CUMARTESİ` are 100% mathematically centered.
+- **Git Repo Ready**: Initialized git repository with main branch and configured origin `https://github.com/brsbrkctn/dijital-maarif-takvim.git`.
+
 ## [2.0.0] - 2026-07-04
 
 ### Major Redesign (Modern & Nostalgic Hybrid)
