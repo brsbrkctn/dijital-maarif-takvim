@@ -1,0 +1,20 @@
+{
+  "name": "dijital-maarif-takvimi",
+  "version": "2.0.0",
+  "description": "Nostalgic digital Saatli Maarif Takvimi single-page web app for desktop and tablet display.",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "keywords": [
+    "maarif-takvimi",
+    "digital-calendar",
+    "aladhan-api",
+    "open-meteo",
+    "prayer-times",
+    "tablet-dashboard"
+  ],
+  "author": "",
+  "license": "MIT"
+}
