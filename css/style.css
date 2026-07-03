@@ -1,6 +1,6 @@
 /* ==========================================================================
-   DIJITAL MAARIF TAKVIMI — PERFECTED MODERN-NOSTALGIC FUSION (v2.4.0)
-   Compact Date Plaque, Prominent Prayer Banner, Clean Quote & Full Duration Words
+   DIJITAL MAARIF TAKVIMI — PERFECTED MODERN-NOSTALGIC FUSION (v2.5.0)
+   Compact Date Plaque, Tighter Gaps, Larger Prayer Cards
    ========================================================================== */
 
 *, *::before, *::after {
@@ -201,40 +201,6 @@ html, body {
 .hand.second { stroke: var(--gold-accent); stroke-width: 1.5; }
 .hand-cap { fill: var(--gold-accent); }
 
-/* PROMINENT NEXT PRAYER COUNTDOWN BANNER */
-.next-prayer-banner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: linear-gradient(135deg, rgba(229, 185, 78, 0.22) 0%, rgba(32, 27, 22, 0.95) 100%);
-  border: 1.5px solid var(--gold-accent);
-  border-radius: 10px;
-  padding: 0.55rem 0.9rem;
-  box-shadow: 0 0 18px rgba(229, 185, 78, 0.15);
-}
-.banner-left {
-  display: flex;
-  flex-direction: column;
-}
-.banner-tag {
-  font-size: 0.65rem;
-  color: var(--gold-accent);
-  font-weight: 800;
-  letter-spacing: 0.1em;
-}
-.banner-prayer-title {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: var(--text-primary);
-}
-.banner-timer {
-  font-size: clamp(1rem, 1.4vw, 1.25rem);
-  font-weight: 800;
-  color: var(--gold-accent);
-  letter-spacing: 1px;
-}
-
-/* Prayer Section */
 .prayer-section {
   flex: 1;
   display: flex;
@@ -242,6 +208,9 @@ html, body {
   gap: 0.4rem;
 }
 .prayer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding-bottom: 0.2rem;
 }
@@ -251,20 +220,30 @@ html, body {
   letter-spacing: 0.05em;
   color: var(--gold-accent);
 }
+.next-prayer-tag {
+  font-size: 0.72rem;
+  color: var(--text-primary);
+  background: rgba(229, 185, 78, 0.15);
+  border: 1px solid rgba(229, 185, 78, 0.3);
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-weight: 600;
+}
 
 .prayer-list-container {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.5rem;
   flex: 1;
-  justify-content: space-around;
+  justify-content: flex-start;
+  margin-top: 0.2rem;
 }
 
 .prayer-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.4rem 0.8rem;
+  padding: 0.8rem 1rem;
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 8px;
@@ -272,7 +251,7 @@ html, body {
 }
 .p-name {
   font-weight: 600;
-  font-size: clamp(0.85rem, 1.05vw, 0.95rem);
+  font-size: clamp(0.95rem, 1.2vw, 1.05rem);
   color: var(--text-primary);
 }
 .p-row-right {
@@ -282,7 +261,7 @@ html, body {
 }
 .p-time-val {
   font-weight: 700;
-  font-size: clamp(0.85rem, 1.1vw, 1rem);
+  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
   letter-spacing: 1px;
 }
 .p-status-badge {
@@ -333,20 +312,22 @@ html, body {
   border-color: var(--card-border-gold);
   box-shadow: 0 0 45px rgba(0,0,0,0.7), inset 0 0 25px var(--gold-glow);
   padding: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .date-plaque-inner {
   width: 100%;
-  height: 100%;
   border: 2px solid var(--gold-accent);
   border-radius: 16px;
-  padding: 1.5rem 1rem;
+  padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  gap: 0.75rem;
+  gap: 0.2rem;
   background: radial-gradient(circle at center, rgba(38,32,26,0.95) 0%, rgba(12,10,8,0.98) 100%);
   box-shadow: inset 0 0 25px rgba(229,185,78,0.15);
 }
@@ -377,7 +358,7 @@ html, body {
   color: var(--gold-accent);
   text-shadow: 0 4px 35px rgba(229, 185, 78, 0.3);
   text-align: center;
-  margin: 0.2rem 0;
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;

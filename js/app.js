@@ -1,15 +1,15 @@
 /**
- * MAIN APP ORCHESTRATOR — v2.4.0
- * Handles clock animations, countdown banner, prayer time status badges,
+ * MAIN APP ORCHESTRATOR — v2.5.0
+ * Handles clock animations, prayer time status badges,
  * full-word daylight/night durations, Open-Meteo weather, and Ankara default.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // Force clean stale localStorage on v2.4.0 update
-  if (localStorage.getItem('maarif_ver') !== '2.4.0') {
+  // Force clean stale localStorage on v2.5.0 update
+  if (localStorage.getItem('maarif_ver') !== '2.5.0') {
     localStorage.removeItem('maarif_city');
-    localStorage.setItem('maarif_ver', '2.4.0');
+    localStorage.setItem('maarif_ver', '2.5.0');
   }
 
   // State (Default city: Ankara)
@@ -56,9 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const nameMale = document.getElementById('name-male');
   const nameFemale = document.getElementById('name-female');
 
-  // Countdown Banner DOM Elements
-  const nextPrayerName = document.getElementById('next-prayer-name');
-  const nextPrayerTimer = document.getElementById('next-prayer-timer');
+  // Countdown DOM Elements
+  const nextPrayerCountdown = document.getElementById('next-prayer-countdown');
   const dayDuration = document.getElementById('day-duration');
   const nightDuration = document.getElementById('night-duration');
 
@@ -224,8 +223,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const cdMStr = String(cdM).padStart(2, '0');
     const cdSStr = String(cdS).padStart(2, '0');
 
-    if (nextPrayerName) nextPrayerName.textContent = nextPrayer.name;
-    if (nextPrayerTimer) nextPrayerTimer.textContent = `${cdHStr}:${cdMStr}:${cdSStr}`;
+    let countdownStr = `⏳ ${nextPrayer.name} vaktine `;
+    if (cdH > 0) countdownStr += `${cdH} Saat `;
+    countdownStr += `${cdM} Dk kaldı`;
+
+    if (nextPrayerCountdown) nextPrayerCountdown.textContent = countdownStr;
 
     // Calculate Day/Night Duration (Sunrise to Sunset) in FULL WORDS
     const dayLengthMins = prayerTimesMins[4].mins - prayerTimesMins[1].mins; // Akşam - Güneş

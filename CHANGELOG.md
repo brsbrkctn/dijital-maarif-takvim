@@ -5,6 +5,13 @@ All notable changes to the **Dijital Maarif Takvimi** project will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2026-07-04
+
+### Fixed & Reverted
+- **Reverted Countdown**: Restored the next prayer countdown back to its original location as a tag inside the prayer section header per user preference.
+- **Enlarged Prayer Cards**: Increased padding and font sizes inside prayer row cards for better visibility and a more balanced vertical layout.
+- **Date Plaque Wrap Fix**: Refactored the center Date Plaque (`.date-plaque-inner`) by removing rigid 100% heights and tightening margins (`gap: 0.2rem`) to perfectly frame the date items in the absolute center of the screen without dead space.
+
 ## [2.4.0] - 2026-07-04
 
 ### Fixed & Enhanced
