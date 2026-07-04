@@ -55,7 +55,7 @@ html, body {
   width: 100%;
   height: 100%;
   max-width: 1480px;
-  max-height: 940px;
+  min-height: 800px;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -154,9 +154,9 @@ html, body {
 .dashboard-grid {
   flex: 1;
   display: grid;
-  grid-template-columns: 2.4fr 3.1fr 2.5fr;
+  grid-template-columns: minmax(320px, 2.4fr) 3.1fr minmax(340px, 2.5fr);
   gap: 0.55rem;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .dash-card {
@@ -327,7 +327,7 @@ html, body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  gap: 0.2rem;
+  gap: 0.8rem;
   background: radial-gradient(circle at center, rgba(38,32,26,0.95) 0%, rgba(12,10,8,0.98) 100%);
   box-shadow: inset 0 0 25px rgba(229,185,78,0.15);
 }
@@ -352,9 +352,9 @@ html, body {
 
 .hero-day-number {
   font-family: var(--font-serif);
-  font-size: clamp(5.5rem, 13.5vw, 11rem);
+  font-size: clamp(5.5rem, 15vh, 11rem);
   font-weight: 900;
-  line-height: 0.95;
+  line-height: 1.05;
   color: var(--gold-accent);
   text-shadow: 0 4px 35px rgba(229, 185, 78, 0.3);
   text-align: center;
@@ -694,8 +694,8 @@ html, body {
     height: auto;
   }
   .dashboard-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
+    grid-template_columns: 1fr;
+    grid-template_rows: auto auto auto;
     overflow: visible;
   }
   .card-center {

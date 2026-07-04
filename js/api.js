@@ -35,13 +35,14 @@ window.ApiService = (function () {
     return { desc: 'Parçalı Bulutlu', icon: 'cloud-sun' };
   }
 
-  // Reverse geocode coordinates to City Name in Turkish
+  // Reverse geocode coordinates to City Name in Turkish using OSM Nominatim
   async function reverseGeocode(lat, lon) {
     try {
-      const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=tr`);
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
       if (res.ok) {
         const data = await res.json();
-        const cityName = data.city || data.principalSubdivision || data.locality || 'Mevcut Konum';
+        const addr = data.address;
+        const cityName = addr.city || addr.province || addr.town || addr.village || addr.suburb || 'Mevcut Konum';
         return cityName;
       }
     } catch (e) {
@@ -74,6 +75,7 @@ window.ApiService = (function () {
   }
 
   async function fetchIpLocation() {
+    // Try ipapi.co first
     try {
       const res = await fetch('https://ipapi.co/json/');
       if (res.ok) {
@@ -85,8 +87,25 @@ window.ApiService = (function () {
         };
       }
     } catch (e) {
-      console.warn('IP location fetch failed:', e);
+      console.warn('ipapi.co fetch failed, trying ip-api.com:', e);
     }
+
+    // Secondary fallback: ip-api.com
+    try {
+      const res = await fetch('http://ip-api.com/json');
+      if (res.ok) {
+        const data = await res.json();
+        return {
+          lat: data.lat || 39.9334,
+          lon: data.lon || 32.8597,
+          name: data.city || 'Ankara'
+        };
+      }
+    } catch (e) {
+      console.warn('ip-api.com fetch failed:', e);
+    }
+
+    // Absolute fallback: Ankara
     return { lat: 39.9334, lon: 32.8597, name: 'Ankara' };
   }
 
