@@ -1,27 +1,27 @@
 /**
- * API SERVICE MODULE (v2.1.0)
- * Real-time Open-Meteo Weather, Aladhan Prayer Times (Exact Date + Lat/Lon),
- * Reverse Geocoding for GPS location detection, and city coordinate mappings.
+ * API SERVICE MODULE (v2.2.0)
+ * Real-time Open-Meteo Weather, Official Diyanet Prayer Times (emushaf.net),
+ * Dynamic Diyanet ID mapping for GPS/AUTO locations.
  */
 
 window.ApiService = (function () {
   
-  // Major Turkish Cities Map
+  // Diyanet City IDs (Official Turkey Codes)
   const CITIES = {
-    'AUTO': { name: 'Otomatik Konum (GPS/IP)', lat: null, lon: null },
-    'Ankara': { name: 'Ankara', lat: 39.9334, lon: 32.8597 },
-    'Istanbul': { name: 'İstanbul', lat: 41.0082, lon: 28.9784 },
-    'Izmir': { name: 'İzmir', lat: 38.4192, lon: 27.1287 },
-    'Bursa': { name: 'Bursa', lat: 40.1885, lon: 29.0610 },
-    'Antalya': { name: 'Antalya', lat: 36.8969, lon: 30.7133 },
-    'Adana': { name: 'Adana', lat: 37.0000, lon: 35.3213 },
-    'Konya': { name: 'Konya', lat: 37.8714, lon: 32.4846 },
-    'Trabzon': { name: 'Trabzon', lat: 41.0027, lon: 39.7168 },
-    'Diyarbakir': { name: 'Diyarbakır', lat: 37.9144, lon: 40.2306 },
-    'Erzurum': { name: 'Erzurum', lat: 39.9043, lon: 41.2679 },
-    'Gaziantep': { name: 'Gaziantep', lat: 37.0662, lon: 37.3833 },
-    'Kayseri': { name: 'Kayseri', lat: 38.7312, lon: 35.4787 },
-    'Sivas': { name: 'Sivas', lat: 39.7477, lon: 37.0179 }
+    'AUTO': { name: 'Otomatik Konum (GPS/IP)', lat: null, lon: null, diyanetId: null },
+    'Ankara': { name: 'Ankara', lat: 39.9334, lon: 32.8597, diyanetId: 506 },
+    'Istanbul': { name: 'İstanbul', lat: 41.0082, lon: 28.9784, diyanetId: 539 },
+    'Izmir': { name: 'İzmir', lat: 38.4192, lon: 27.1287, diyanetId: 535 },
+    'Bursa': { name: 'Bursa', lat: 40.1885, lon: 29.0610, diyanetId: 516 },
+    'Antalya': { name: 'Antalya', lat: 36.8969, lon: 30.7133, diyanetId: 507 },
+    'Adana': { name: 'Adana', lat: 37.0000, lon: 35.3213, diyanetId: 501 },
+    'Konya': { name: 'Konya', lat: 37.8714, lon: 32.4846, diyanetId: 549 },
+    'Trabzon': { name: 'Trabzon', lat: 41.0027, lon: 39.7168, diyanetId: 574 },
+    'Diyarbakir': { name: 'Diyarbakır', lat: 37.9144, lon: 40.2306, diyanetId: 521 },
+    'Erzurum': { name: 'Erzurum', lat: 39.9043, lon: 41.2679, diyanetId: 526 },
+    'Gaziantep': { name: 'Gaziantep', lat: 37.0662, lon: 37.3833, diyanetId: 529 },
+    'Kayseri': { name: 'Kayseri', lat: 38.7312, lon: 35.4787, diyanetId: 544 },
+    'Sivas': { name: 'Sivas', lat: 39.7477, lon: 37.0179, diyanetId: 569 }
   };
 
   function translateWMO(code) {
@@ -42,13 +42,32 @@ window.ApiService = (function () {
       if (res.ok) {
         const data = await res.json();
         const addr = data.address;
-        const cityName = addr.city || addr.province || addr.town || addr.village || addr.suburb || 'Mevcut Konum';
+        const cityName = addr.city || addr.province || addr.town || addr.village || addr.suburb || 'Ankara';
         return cityName;
       }
     } catch (e) {
       console.warn('Reverse geocode failed:', e);
     }
-    return 'Mevcut Konum';
+    return 'Ankara';
+  }
+
+  // Find Diyanet ID by matching city name from emushaf city list
+  async function getDiyanetIdByCityName(cityName) {
+    try {
+      const res = await fetch('https://ezanvakti.emushaf.net/sehirler/2'); // 2 = Turkey
+      if (res.ok) {
+        const cities = await res.json();
+        // Exact match or contains (Turkish char insensitive is tricky, so we do basic search)
+        const found = cities.find(c => 
+          cityName.toLocaleLowerCase('tr-TR').includes(c.SehirAd.toLocaleLowerCase('tr-TR')) ||
+          c.SehirAd.toLocaleLowerCase('tr-TR').includes(cityName.toLocaleLowerCase('tr-TR'))
+        );
+        return found ? found.SehirID : 506; // Default to Ankara if not found
+      }
+    } catch (e) {
+      console.warn('Diyanet ID lookup failed:', e);
+    }
+    return 506;
   }
 
   // Detect GPS or IP location
@@ -60,22 +79,26 @@ window.ApiService = (function () {
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
             const cityName = await reverseGeocode(lat, lon);
-            resolve({ lat, lon, name: cityName });
+            const dId = await getDiyanetIdByCityName(cityName);
+            resolve({ lat, lon, name: cityName, diyanetId: dId });
           },
           async () => {
             const ipLoc = await fetchIpLocation();
-            resolve(ipLoc);
+            const dId = await getDiyanetIdByCityName(ipLoc.name);
+            resolve({ ...ipLoc, diyanetId: dId });
           },
           { timeout: 6000 }
         );
       } else {
-        fetchIpLocation().then(resolve);
+        fetchIpLocation().then(async (ipLoc) => {
+          const dId = await getDiyanetIdByCityName(ipLoc.name);
+          resolve({ ...ipLoc, diyanetId: dId });
+        });
       }
     });
   }
 
   async function fetchIpLocation() {
-    // Try ipapi.co first
     try {
       const res = await fetch('https://ipapi.co/json/');
       if (res.ok) {
@@ -86,26 +109,7 @@ window.ApiService = (function () {
           name: data.city || 'Ankara'
         };
       }
-    } catch (e) {
-      console.warn('ipapi.co fetch failed, trying ip-api.com:', e);
-    }
-
-    // Secondary fallback: ip-api.com
-    try {
-      const res = await fetch('http://ip-api.com/json');
-      if (res.ok) {
-        const data = await res.json();
-        return {
-          lat: data.lat || 39.9334,
-          lon: data.lon || 32.8597,
-          name: data.city || 'Ankara'
-        };
-      }
-    } catch (e) {
-      console.warn('ip-api.com fetch failed:', e);
-    }
-
-    // Absolute fallback: Ankara
+    } catch (e) {}
     return { lat: 39.9334, lon: 32.8597, name: 'Ankara' };
   }
 
@@ -130,70 +134,75 @@ window.ApiService = (function () {
         cityName: cityName
       };
     } catch (err) {
-      console.warn('Weather API fallback used:', err);
-      return {
-        temp: 24,
-        feels: 25,
-        humidity: 52,
-        wind: 14,
-        max: 27,
-        min: 18,
-        desc: 'Az Bulutlu',
-        icon: 'cloud-sun',
-        cityName: cityName
-      };
+      return { temp: 24, feels: 25, humidity: 52, wind: 14, max: 27, min: 18, desc: 'Az Bulutlu', icon: 'cloud-sun', cityName: cityName };
     }
   }
 
-  // Fetch Aladhan Prayer Times with EXACT LOCAL DATE + LAT/LON
-  async function fetchPrayerTimes(lat, lon) {
-    const now = new Date();
-    const dStr = String(now.getDate()).padStart(2, '0');
-    const mStr = String(now.getMonth() + 1).padStart(2, '0');
-    const yStr = now.getFullYear();
-    const dateStr = `${dStr}-${mStr}-${yStr}`;
-
+  // Fetch Official Diyanet Prayer Times (via emushaf.net)
+  async function fetchPrayerTimes(lat, lon, diyanetId = 506) {
     try {
-      // Method 13 = Diyanet İşleri Başkanlığı Turkey
-      const url = `https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lon}&method=13`;
+      // Primary: Official Diyanet mapping via emushaf.net
+      const url = `https://ezanvakti.emushaf.net/vakitler?sehir=${diyanetId}`;
       const res = await fetch(url);
-      if (!res.ok) throw new Error('Prayer API error');
-      const json = await res.json();
-      const timings = json.data.timings;
-      const hijri = json.data.date.hijri;
+      if (!res.ok) throw new Error('Diyanet API error');
+      const data = await res.json();
+      const today = data[0]; // First element is today's schedule
 
-      // In Turkish Diyanet calendars:
-      // İmsak = Fajr (or Imsak)
-      // Güneş = Sunrise
-      // Öğle = Dhuhr
-      // İkindi = Asr
-      // Akşam = Maghrib
-      // Yatsı = Isha
+      // Helper for Hijri (we can still use a simplified calc or fetch from Aladhan for Hijri only if needed)
+      // For now, let's keep Hijri logic separate or use a static/calculated fallback
+      const hijriDate = await fetchHijriOnly(lat, lon);
+
       return {
-        imsak: timings.Fajr || timings.Imsak,
-        gunes: timings.Sunrise,
-        ogle: timings.Dhuhr,
-        ikindi: timings.Asr,
-        aksam: timings.Maghrib,
-        yatsi: timings.Isha,
-        hijriDay: hijri.day,
-        hijriMonth: hijri.month.tr || hijri.month.en || 'MUHARREM',
-        hijriYear: hijri.year
+        imsak: today.Imsak,
+        gunes: today.Gunes,
+        ogle: today.Ogle,
+        ikindi: today.Ikindi,
+        aksam: today.Aksam,
+        yatsi: today.Yatsi,
+        hijriDay: hijriDate.day,
+        hijriMonth: hijriDate.month,
+        hijriYear: hijriDate.year
       };
     } catch (err) {
-      console.warn('Prayer API fallback used:', err);
-      return {
-        imsak: '03:22',
-        gunes: '05:18',
-        ogle: '12:59',
-        ikindi: '16:56',
-        aksam: '20:32',
-        yatsi: '22:19',
-        hijriDay: '17',
-        hijriMonth: 'MUHARREM',
-        hijriYear: '1448'
-      };
+      console.warn('Primary Diyanet API failed, falling back to Aladhan:', err);
+      return fetchAladhanFallback(lat, lon);
     }
+  }
+
+  // Fallback Hijri fetching via Aladhan
+  async function fetchHijriOnly(lat, lon) {
+    try {
+      const now = new Date();
+      const dateStr = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth()+1).padStart(2, '0')}-${now.getFullYear()}`;
+      const res = await fetch(`https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lon}&method=13`);
+      const json = await res.json();
+      const h = json.data.date.hijri;
+      return { day: h.day, month: h.month.tr || h.month.en, year: h.year };
+    } catch (e) {
+      return { day: '17', month: 'MUHARREM', year: '1448' };
+    }
+  }
+
+  // Complete Fallback (Aladhan)
+  async function fetchAladhanFallback(lat, lon) {
+    const now = new Date();
+    const dateStr = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth()+1).padStart(2, '0')}-${now.getFullYear()}`;
+    const url = `https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lon}&method=13`;
+    const res = await fetch(url);
+    const json = await res.json();
+    const t = json.data.timings;
+    const h = json.data.date.hijri;
+    return {
+      imsak: t.Fajr || t.Imsak,
+      gunes: t.Sunrise,
+      ogle: t.Dhuhr,
+      ikindi: t.Asr,
+      aksam: t.Maghrib,
+      yatsi: t.Isha,
+      hijriDay: h.day,
+      hijriMonth: h.month.tr || h.month.en,
+      hijriYear: h.year
+    };
   }
 
   return {
