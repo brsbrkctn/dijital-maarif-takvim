@@ -55,7 +55,6 @@ html, body {
   width: 100%;
   height: 100%;
   max-width: 1480px;
-  min-height: 800px;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -156,7 +155,7 @@ html, body {
   display: grid;
   grid-template-columns: minmax(320px, 2.4fr) 3.1fr minmax(340px, 2.5fr);
   gap: 0.55rem;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .dash-card {
@@ -694,8 +693,8 @@ html, body {
     height: auto;
   }
   .dashboard-grid {
-    grid-template_columns: 1fr;
-    grid-template_rows: auto auto auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
     overflow: visible;
   }
   .card-center {
