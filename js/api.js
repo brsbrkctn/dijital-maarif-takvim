@@ -1,5 +1,5 @@
 /**
- * API SERVICE MODULE (v2.2.0)
+ * API SERVICE MODULE (v2.2.1)
  * Real-time Open-Meteo Weather, Official Diyanet Prayer Times (emushaf.net),
  * Dynamic Diyanet ID mapping for GPS/AUTO locations.
  */
@@ -57,12 +57,11 @@ window.ApiService = (function () {
       const res = await fetch('https://ezanvakti.emushaf.net/sehirler/2'); // 2 = Turkey
       if (res.ok) {
         const cities = await res.json();
-        // Exact match or contains (Turkish char insensitive is tricky, so we do basic search)
         const found = cities.find(c => 
           cityName.toLocaleLowerCase('tr-TR').includes(c.SehirAd.toLocaleLowerCase('tr-TR')) ||
           c.SehirAd.toLocaleLowerCase('tr-TR').includes(cityName.toLocaleLowerCase('tr-TR'))
         );
-        return found ? found.SehirID : 506; // Default to Ankara if not found
+        return found ? found.SehirID : 506;
       }
     } catch (e) {
       console.warn('Diyanet ID lookup failed:', e);
@@ -141,23 +140,33 @@ window.ApiService = (function () {
   // Fetch Official Diyanet Prayer Times (via emushaf.net)
   async function fetchPrayerTimes(lat, lon, diyanetId = 506) {
     try {
-      // Primary: Official Diyanet mapping via emushaf.net
       const url = `https://ezanvakti.emushaf.net/vakitler?sehir=${diyanetId}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error('Diyanet API error');
       const data = await res.json();
-      const today = data[0]; // First element is today's schedule
+      
+      // Select the correct date from the array (usually index 0 is today, but we should verify)
+      const now = new Date();
+      const todayStr = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+      let today = data.find(d => d.MiladiTarihKisa === todayStr) || data[0];
 
-      // Helper for Hijri (we can still use a simplified calc or fetch from Aladhan for Hijri only if needed)
-      // For now, let's keep Hijri logic separate or use a static/calculated fallback
       const hijriDate = await fetchHijriOnly(lat, lon);
+
+      // Helper to add 1 minute to Maghrib (Akşam) to match Diyanet official app's safety margin (temkin)
+      const addOneMinute = (timeStr) => {
+        if (!timeStr) return timeStr;
+        const [h, m] = timeStr.split(':').map(Number);
+        const date = new Date();
+        date.setHours(h, m + 1, 0);
+        return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+      };
 
       return {
         imsak: today.Imsak,
         gunes: today.Gunes,
         ogle: today.Ogle,
         ikindi: today.Ikindi,
-        aksam: today.Aksam,
+        aksam: addOneMinute(today.Aksam), // Fix: Maghrib usually needs +1m Diyanet adjustment
         yatsi: today.Yatsi,
         hijriDay: hijriDate.day,
         hijriMonth: hijriDate.month,

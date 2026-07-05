@@ -1,5 +1,5 @@
 /* ==========================================================================
-   DIJITAL MAARIF TAKVIMI — PERFECTED MODERN-NOSTALGIC FUSION (v2.5.0)
+   DIJITAL MAARIF TAKVIMI — PERFECTED MODERN-NOSTALGIC FUSION (v2.5.1)
    Compact Date Plaque, Tighter Gaps, Larger Prayer Cards
    ========================================================================== */
 
@@ -31,7 +31,7 @@
 html, body {
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
   background-color: var(--bg-dark);
   background: var(--bg-gradient);
   color: var(--text-primary);
@@ -680,24 +680,76 @@ html, body {
 }
 
 /* --- RESPONSIVE MOBILE STYLES --- */
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .card-center {
+    grid-column: span 2;
+    order: -1;
+  }
+}
+
 @media (max-width: 768px), (max-aspect-ratio: 1/1) {
   html, body {
     overflow-y: auto;
+    height: auto;
   }
   .app-root {
     height: auto;
     min-height: 100vh;
+    padding: 0.75rem;
   }
   .dashboard-wrapper {
-    max-height: none;
     height: auto;
+    gap: 0.75rem;
   }
   .dashboard-grid {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto;
     overflow: visible;
+    gap: 0.75rem;
   }
   .card-center {
-    order: -1;
+    grid-column: span 1;
+  }
+  .dash-card {
+    overflow: visible;
+    height: auto;
+    min-height: fit-content;
+  }
+  .date-plaque-inner {
+    padding: 1.5rem 1rem;
+  }
+  .hero-day-number {
+    font-size: clamp(5rem, 25vw, 8rem);
+  }
+  .plaque-month {
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
+  }
+  .plaque-day-name {
+    font-size: clamp(1.4rem, 6vw, 2rem);
+  }
+  .top-bar {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.6rem;
+  }
+  .brand-name {
+    font-size: 1rem;
+  }
+  .hijri-badge-header {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .w-metrics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .names-row {
+    flex-direction: column;
   }
 }
